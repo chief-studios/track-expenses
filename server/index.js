@@ -3,7 +3,8 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const { authenticateToken, authorizeRoles } = require("./middleware/authMiddleware")
 const authRoutes = require("./routes/authRoutes")
-// const expensesRoutes = require("./routes/expensesRoutes")
+const expensesRoutes = require("./routes/expensesRoutes")
+const billRoutes = require("./routes/billRoutes")
 
 require("dotenv").config()
 
@@ -14,7 +15,8 @@ app.use(cors())
 app.use(express.json())
 
 app.use("/auth", authRoutes)
-// app.use("/expenses", expensesRoutes)
+app.use("/expenses", expensesRoutes)
+app.use("/bills", billRoutes)
 
 app.get("/testing", (req, res) => {
     res.send("app is online")
