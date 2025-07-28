@@ -3,7 +3,7 @@ const expense = require("../models/expenseModel")
 const createExpense = async (req, res) => {
     try {
         const { bill, description, date, category, amount, paymentBy, submittedBy } = req.body
-        const newExpense = await new expense.create({
+        const newExpense = await expense.create({
             bill,
             description: description || "",
             date: date || Date.now(),
@@ -13,7 +13,7 @@ const createExpense = async (req, res) => {
             submittedBy: req.user._id
         })
         await newExpense.save()
-        res.status(201).json(expense)
+        res.status(201).json(newExpense)
     } catch (err) {
         res.status(500).json({ message: "something went wrong..." })
     }
@@ -51,7 +51,7 @@ const getAllExpensesForBill = async (req, res) => {
 
 const updateExpense = async (req, res) => {
     try {
-        const updatedExpense = await expense.findByIdAndUpdage(req.params.id, req.body, { new: true })
+        const updatedExpense = await expense.findByIdAndUpdate(req.params.id, req.body, { new: true })
         if (!updatedExpense) {
             return res.status(404).json({ message: "expense not found" })
         }
@@ -64,7 +64,7 @@ const updateExpense = async (req, res) => {
 const deleteExpense = async (req, res) => {
     try {
         const deletedExpense = await expense.findByIdAndDelete(req.params.id)
-        if (!deleteExpense) {
+        if (!deletedExpense) {
             return res.status(404).json({ message: "expense not found" })
         }
         res.status(200).json({ message: "expense deleted successfully" })

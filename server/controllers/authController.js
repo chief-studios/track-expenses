@@ -9,11 +9,11 @@ const register = async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: "user already exists" })
         }
-        const hashePassword = await bcrypt.hash(password, 10)
-        const newUser = new user.create({
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const newUser = await user.create({
             email,
             username,
-            password: hashePassword,
+            password: hashedPassword,
             role: role
         })
         res.status(201).json({ message: "user created successfully", user: newUser})
@@ -25,12 +25,16 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try { 
         const { username, password } = req.body
-        const user = await user.findOne({ username })
-        if (!user) {
+        const foundUser = await user.findOne({ username })
+        if (!foundUser) {
             return res.status(404).json({ message: "user not found" })
         }
+        const isPasswordValid = await bcrypt.compare(password, foundUser.password)
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "invalid credentials" })
+        }
         const token = jwt.sign(
-            { userId: user._id, role: user.role },
+            { userId: foundUser._id, role: foundUser.role },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         )
@@ -38,10 +42,10 @@ const login = async (req, res) => {
             message: "login successful",
             token,
             user: {
-                id: user._id, 
-                name: user.username,
-                email: user.email,
-                role: user.role
+                id: foundUser._id, 
+                username: foundUser.username,
+                email: foundUser.email,
+                role: foundUser.role
             }
         })
     }
