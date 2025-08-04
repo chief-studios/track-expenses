@@ -5,6 +5,6 @@ const { authenticateToken, authorizeRoles } = require("../middleware/authMiddlew
 const router = express.Router()
 
 router.post("/register", register)
-router.post("login", login)
+router.post("/login", login)
 
 module.exports = router

@@ -4,15 +4,15 @@ const expense = require("../models/expenseModel")
 const createBill = async (req, res) => {
     try {
         const { title, descriptiton, date, createdBy } = req.body
-        const newBill = await new bill.create({
+        const newBill = await bill.create({
             title,
             descriptiton: descriptiton || "",
             date: date || Date.now(),
-            createdBy: req.user._id
+            createdBy: createdBy || req.user._id,
         })
-        await newBill.save()
         res.status(201).json(newBill)
     } catch (err) {
+        console.log(err.message)
         res.status(500).json({ message: "something went wrong..."})
     }
 }
@@ -29,19 +29,20 @@ const getAllBills = async (req, res) => {
 const getBillById = async (req, res) => {
     try {
         const billId = req.params.id
-        const foundBill = await bill.find(billId).populate("createdBy", "username")
+        const foundBill = await bill.find({ _id: billId }).populate("createdBy", "username")
         if (!foundBill) {
             return res.status(404).json({ message: "Bill not found" })
         }
         res.status(200).json(foundBill)
     } catch (err) {
+        console.log(err.message)
         res.status(500).json({ message: "something went wrong..." })
     }
 }
 
 const updateBill = async (req, res) => {
     try {
-        const { billId } = req.params.id
+        const billId = req.params.id
         const { title, description, date } = req.body
         const updatedBill = await bill.findByIdAndUpdate(
             billId,
@@ -57,6 +58,7 @@ const updateBill = async (req, res) => {
         }
         res.status(200).json(updatedBill)
     } catch (err) {
+        console.log(err.message)
         res.status(500).json({ message: "something went wrong..." })
     }
 }

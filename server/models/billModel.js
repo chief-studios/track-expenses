@@ -23,4 +23,4 @@ const billSchema = new mongoose.Schema({
     timestamps: true
     })
 
-const Bill = mongoose.model("bill", billSchema)
+module.exports = mongoose.model("bill", billSchema)
