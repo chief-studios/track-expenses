@@ -1,4 +1,4 @@
-const expense = require("../models/expenseModel")
+const expense = require("../models/expenseModel.js")
 
 const createExpense = async (req, res) => {
     try {
@@ -10,11 +10,12 @@ const createExpense = async (req, res) => {
             category: category,
             amount,
             paymentBy,
-            submittedBy: req.user._id
+            submittedBy: req.user.userId
         })
         await newExpense.save()
         res.status(201).json(newExpense)
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: "something went wrong..." })
     }
 }
@@ -24,6 +25,7 @@ const getAllExpenses = async (req, res) => {
         const expenses = await expense.find().populate("bill").populate("submittedBy", "username")
         res.status(200).json(expenses)
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: "something went wrong..." })
     }
 }

@@ -1,5 +1,5 @@
 const bill = require("../models/billModel")
-const expense = require("../models/expenseModel")
+const expense = require("../models/expenseModel.js")
 
 const createBill = async (req, res) => {
     try {
