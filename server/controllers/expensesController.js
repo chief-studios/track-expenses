@@ -15,17 +15,15 @@ const createExpense = async (req, res) => {
         await newExpense.save()
         res.status(201).json(newExpense)
     } catch (err) {
-        console.log(err)
         res.status(500).json({ message: "something went wrong..." })
     }
 }
 
 const getAllExpenses = async (req, res) => {
     try {
-        const expenses = await expense.find().populate("bill").populate("submittedBy", "username")
+        const expenses = await expense.find()
         res.status(200).json(expenses)
     } catch (err) {
-        console.log(err)
         res.status(500).json({ message: "something went wrong..." })
     }
 }
@@ -33,10 +31,11 @@ const getAllExpenses = async (req, res) => {
 const getExpenseById = async (req, res) => {
     try {
         const expenseId = req.params.id
-        const expense = await expense.findById(expenseId)
-        if (!expense) {
+        const foundExpense = await expense.findById(expenseId)
+        if (!foundExpense) {
             return res.status(404).json({ message: "expense not found"})
         }
+        res.status(200).json(foundExpense)
     } catch (err) {
         res.status(500).json({ message: "something went wrong..." })
     }
@@ -44,9 +43,10 @@ const getExpenseById = async (req, res) => {
 
 const getAllExpensesForBill = async (req, res) => {
     try {
-        const expenses = await expense.find({ bill: req.params.billId }).populate("bill")
+        const expenses = await expense.find({ bill: req.params.billId })
         res.status(200).json(expenses)
     } catch (err) {
+        console.log(err)
         res.status(500).json({ message: "something went wrong..." })
     }
 }
