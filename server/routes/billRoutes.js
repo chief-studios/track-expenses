@@ -5,21 +5,28 @@ const {
     getBillById,
     updateBill,
     deleteBill,
-    getBillWithExpenses
+    getBillWithExpenses,
+    getBillSplit
 } = require("../controllers/billController")
 const { authenticateToken,
     authorizeRoles
 } = require("../middleware/authMiddleware")
+const {
+    validateCreateBill,
+    validateUpdateBill,
+    validateMongoId
+} = require("../middleware/validation")
 
 const router = express.Router()
 
 router.use(authenticateToken)
 
 router.get("/", getAllBills)
-router.post("/", createBill)
-router.get("/:id", getBillById)
-router.put("/:id", authorizeRoles("admin", "data-entry"), updateBill)
-router.delete("/:id", authorizeRoles("admin"), deleteBill)
-router.get("/:id/expenses", getBillWithExpenses)
+router.post("/", validateCreateBill, createBill)
+router.get("/:id", validateMongoId, getBillById)
+router.put("/:id", authorizeRoles("admin", "data-entry"), validateUpdateBill, updateBill)
+router.delete("/:id", authorizeRoles("admin"), validateMongoId, deleteBill)
+router.get("/:id/expenses", validateMongoId, getBillWithExpenses)
+router.get("/:id/split", validateMongoId, getBillSplit)
 
 module.exports = router

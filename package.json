@@ -1,0 +1,19 @@
+{
+  "name": "track-expenses",
+  "version": "1.0.0",
+  "description": "this is the readme.md file",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chief-studios/track-expenses.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chief-studios/track-expenses/issues"
+  },
+  "homepage": "https://github.com/chief-studios/track-expenses#readme"
+}

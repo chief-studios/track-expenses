@@ -1,0 +1,60 @@
+{
+  service: 'expense-tracker-api',
+  warning: 'PORT not set, using default: 5000 (Server port)',
+  level: 'warn',
+  message: 'Environment Warning',
+  timestamp: '2025-10-02 14:48:40'
+}
+{
+  service: 'expense-tracker-api',
+  warning: 'NODE_ENV not set, using default: development (Environment)',
+  level: 'warn',
+  message: 'Environment Warning',
+  timestamp: '2025-10-02 14:48:40'
+}
+{
+  service: 'expense-tracker-api',
+  warning: 'LOG_LEVEL not set, using default: info (Logging level)',
+  level: 'warn',
+  message: 'Environment Warning',
+  timestamp: '2025-10-02 14:48:40'
+}
+{
+  service: 'expense-tracker-api',
+  nodeEnv: 'development',
+  port: '5000',
+  logLevel: 'info',
+  level: 'info',
+  message: 'Environment validation passed',
+  timestamp: '2025-10-02 14:48:40'
+}
+{
+  service: 'expense-tracker-api',
+  level: 'info',
+  message: 'Mongoose connected to MongoDB',
+  timestamp: '2025-10-02 14:48:43'
+}
+{
+  service: 'expense-tracker-api',
+  host: 'ac-xp8vpaj-shard-00-00.3ae86dj.mongodb.net',
+  port: 27017,
+  database: 'test',
+  level: 'info',
+  message: 'Connected to MongoDB successfully',
+  timestamp: '2025-10-02 14:48:43'
+}
+{
+  service: 'expense-tracker-api',
+  level: 'info',
+  message: 'Database indexes created successfully',
+  timestamp: '2025-10-02 14:48:47'
+}
+{
+  service: 'expense-tracker-api',
+  port: 5000,
+  environment: 'development',
+  timestamp: '2025-10-02 14:48:47',
+  logLevel: 'info',
+  level: 'info',
+  message: 'Server started successfully'
+}

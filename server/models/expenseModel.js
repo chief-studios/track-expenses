@@ -12,17 +12,13 @@ const expenseSchema = new mongoose.Schema({
         default: Date.now
     },
     category: {
-        type: String,
-        required: true,
-        enum: ["tv", "stand", "transport"]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true
     },
     amount: {
         type: Number,
         required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now
     },
     paymentBy: {
         type: String,

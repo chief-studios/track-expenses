@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Custom Properties for Black & Smoke White Theme */
+:root {
+  /* Primary colors */
+  --primary-50: #f8fafc;
+  --primary-100: #f1f5f9;
+  --primary-200: #e2e8f0;
+  --primary-300: #cbd5e1;
+  --primary-400: #94a3b8;
+  --primary-500: #64748b;
+  --primary-600: #475569;
+  --primary-700: #334155;
+  --primary-800: #1e293b;
+  --primary-900: #0f172a;
+  --primary-950: #020617;
+  
+  /* Smoke white variants */
+  --smoke-white-50: #fafafa;
+  --smoke-white-100: #f4f4f5;
+  --smoke-white-200: #e4e4e7;
+  --smoke-white-300: #d4d4d8;
+  --smoke-white-400: #a1a1aa;
+  --smoke-white-500: #71717a;
+  
+  /* Semantic colors */
+  --app-bg: #fafafa;
+  --card-bg: #ffffff;
+  --sidebar-bg: #ffffff;
+  --header-bg: #ffffff;
+  --primary-text: #0f172a;
+  --secondary-text: #64748b;
+  --muted-text: #94a3b8;
+  --app-border: #e2e8f0;
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--app-bg);
+  color: var(--primary-text);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Utility classes for consistent theming */
+.bg-app-bg { background-color: var(--app-bg); }
+.bg-card-bg { background-color: var(--card-bg); }
+.bg-sidebar-bg { background-color: var(--sidebar-bg); }
+.bg-header-bg { background-color: var(--header-bg); }
+.text-primary-text { color: var(--primary-text); }
+.text-secondary-text { color: var(--secondary-text); }
+.text-muted-text { color: var(--muted-text); }
+.border-app-border { border-color: var(--app-border); }

@@ -1,21 +1,33 @@
 const bill = require("../models/billModel")
 const expense = require("../models/expenseModel.js")
+const { asyncHandler, ValidationError, NotFoundError } = require("../middleware/errorHandler")
+const { logInfo } = require("../utils/logger")
 
-const createBill = async (req, res) => {
-    try {
-        const { title, descriptiton, date, createdBy } = req.body
-        const newBill = await bill.create({
-            title,
-            descriptiton: descriptiton || "",
-            date: date || Date.now(),
-            createdBy: createdBy || req.user._id,
-        })
-        res.status(201).json(newBill)
-    } catch (err) {
-        console.log(err.message)
-        res.status(500).json({ message: "something went wrong..."})
-    }
-}
+const createBill = asyncHandler(async (req, res) => {
+    const { title, description, date, contributors } = req.body
+
+    const newBill = await bill.create({
+        title,
+        description: description || "",
+        date: date || Date.now(),
+        createdBy: req.user.userId,
+        contributors: contributors || []
+    })
+
+    await newBill.populate('createdBy', 'username email')
+
+    logInfo('New bill created', {
+        billId: newBill._id,
+        title: newBill.title,
+        createdBy: req.user.userId
+    })
+
+    res.status(201).json({
+        success: true,
+        message: 'Bill created successfully',
+        data: newBill
+    })
+})
 
 const getAllBills = async (req, res) => {
     try {
@@ -65,29 +77,57 @@ const updateBill = async (req, res) => {
 
 const deleteBill = async (req, res) => {
     try {
-        const { billId } = req.params.id
+        const billId = req.params.id
         const deletedBill = await bill.findByIdAndDelete(billId)
         if (!deletedBill) {
             return res.status(404).json({ message: "Bill not found" })
         }
+        res.status(200).json({ message: "Bill deleted successfully" })
     } catch (err) {
         res.status(500).json({ message: "something went wrong..." })
     }
 }
 
-const getBillWithExpenses = async (req, res) => {
-    try {
-        const billId = req.params.id
-        const foundBill = await bill.findById(billId).poppulate("createdBy", "username")
-        if(!foundBill) {
-            return res.status(404).json({ message: "Bill not found" })
-        }
-        const expenseForBill = await expense.find({ bill: billId }).populate("paymentBy", "username")
-        res.status(200).json({ bill: foundBill, expenses: expenseForBill })
-    } catch (err) {
-        res.status(500).json({ message: "something went wrong..." })
+const getBillWithExpenses = asyncHandler(async (req, res) => {
+    const billSummary = await bill.getBillSummary(req.params.id)
+
+    if (!billSummary) {
+        throw new NotFoundError('Bill')
     }
-}
+
+    res.status(200).json({
+        success: true,
+        data: billSummary
+    })
+})
+
+const getBillSplit = asyncHandler(async (req, res) => {
+    const foundBill = await bill.findById(req.params.id)
+        .populate('createdBy', 'username email')
+        .populate('contributors.user', 'username email')
+
+    if (!foundBill) {
+        throw new NotFoundError('Bill')
+    }
+
+    const expenses = await expense.find({ bill: req.params.id })
+        .populate('category', 'displayName color')
+        .populate('submittedBy', 'username')
+
+    const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0)
+    const split = foundBill.calculateSplit()
+
+    res.status(200).json({
+        success: true,
+        data: {
+            bill: foundBill,
+            totalExpenses,
+            split,
+            expenses,
+            isBalanced: Math.abs(totalExpenses - foundBill.totalAmount) < 0.01
+        }
+    })
+})
 
 module.exports = {
     createBill,
@@ -95,5 +135,6 @@ module.exports = {
     getBillById,
     updateBill,
     deleteBill,
-    getBillWithExpenses
+    getBillWithExpenses,
+    getBillSplit
 }
