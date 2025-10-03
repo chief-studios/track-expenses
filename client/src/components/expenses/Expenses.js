@@ -76,15 +76,15 @@ const Expenses = () => {
     if (filter.category && expense.category !== filter.category) {
       return false;
     }
-    if (filter.paymentBy && !expense.paymentBy.toLowerCase().includes(filter.paymentBy.toLowerCase())) {
+    if (filter.paymentBy && !expense.paymentBy?.toLowerCase().includes(filter.paymentBy.toLowerCase())) {
       return false;
     }
     return true;
   });
 
-  // Get unique values for filters
-  const categories = [...new Set(expenses.map(expense => expense.category))];
-  const paymentByOptions = [...new Set(expenses.map(expense => expense.paymentBy))];
+  // Get unique values for filters, filtering out undefined/null
+  const categories = [...new Set(expenses.map(expense => expense.category).filter(Boolean))];
+  const paymentByOptions = [...new Set(expenses.map(expense => expense.paymentBy).filter(Boolean))];
 
   // Calculate totals
   const totalAmount = filteredExpenses.reduce((sum, expense) => sum + expense.amount, 0);
@@ -140,8 +140,10 @@ const Expenses = () => {
               >
                 <option value="">All Categories</option>
                 {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  <option key={category || 'uncategorized'} value={category || ''}>
+                    {category
+                      ? category.charAt(0).toUpperCase() + category.slice(1)
+                      : 'Uncategorized'}
                   </option>
                 ))}
               </select>
@@ -157,8 +159,8 @@ const Expenses = () => {
               >
                 <option value="">All People</option>
                 {paymentByOptions.map(person => (
-                  <option key={person} value={person}>
-                    {person}
+                  <option key={person || 'unknown'} value={person || ''}>
+                    {person || 'Unknown'}
                   </option>
                 ))}
               </select>
@@ -206,7 +208,7 @@ const Expenses = () => {
                           {expense.description || 'No description'}
                         </p>
                         <span className="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                          {expense.category}
+                          {expense.category || 'Uncategorized'}
                         </span>
                       </div>
                       <div className="mt-2 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6">
@@ -216,7 +218,7 @@ const Expenses = () => {
                         </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <User className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                          Paid by {expense.paymentBy}
+                          Paid by {expense.paymentBy || 'Unknown'}
                         </div>
                         {bills[expense.bill] && (
                           <div className="flex items-center text-sm text-gray-500">
